@@ -91,6 +91,7 @@ export default function Analytics() {
   const [filtered, setFiltered] = useState(null)
   const [loading, setLoading]   = useState(true)
 const [filtering, setFiltering] = useState(false)
+const [filtering, setFiltering] = useState(false)
   const [depot, setDepot]       = useState('All')
   const [nationality, setNationality] = useState('All')
   const [year, setYear]         = useState('All')
