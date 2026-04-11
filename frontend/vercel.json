@@ -1,3 +1,1 @@
-Set-Content -Path "R:\driver dashboard\driver-dashboard\frontend\vercel.json" -Value '{
-    "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
-  }'
+{"rewrites":[{"source":"/(.*?)","destination":"/index.html"}]}
