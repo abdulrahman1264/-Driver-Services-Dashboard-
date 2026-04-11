@@ -10,7 +10,7 @@ export default function Terminated() {
   const [drivers, setDrivers]   = useState([])
   const [total, setTotal]       = useState(0)
   const [loading, setLoading]   = useState(true)
-const [filtering, setFiltering] = useState(false)
+  const [filtering, setFiltering] = useState(false)
   const [page, setPage]         = useState(1)
   const [slicerOpen, setSlicerOpen] = useState(true)
   const [search, setSearch]     = useState('')
@@ -29,7 +29,7 @@ const [filtering, setFiltering] = useState(false)
       const res = await api.getDrivers(params)
       setDrivers(res.data); setTotal(res.total); setPage(p)
     } catch(e) { toast.error(e.message) }
-    finally { setFiltering(false) }
+    finally { setLoading(false); setFiltering(false) }
   }
 
   function applyFilter(k, v) {

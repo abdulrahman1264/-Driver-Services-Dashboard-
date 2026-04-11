@@ -263,7 +263,7 @@ export default function Drivers() {
       const res = await api.getDrivers(params)
       setDrivers(res.data); setTotal(res.total); setPage(p)
     } catch(e) { toast.error(e.message) }
-    finally { setLoading(false); setFiltering(false) }
+    finally { setLoading(false) }
   }
 
   useEffect(() => { load() }, [])

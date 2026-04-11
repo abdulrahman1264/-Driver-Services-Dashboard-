@@ -77,7 +77,7 @@ export default function Documents() {
       const res = await api.getDrivers(params)
       setDrivers(res.data); setTotal(res.total); setPage(p)
     } catch(e) { toast.error(e.message) }
-    finally { setFiltering(false) }
+    finally { setLoading(false); setFiltering(false) }
   }
 
   async function handleCSV(e) {
