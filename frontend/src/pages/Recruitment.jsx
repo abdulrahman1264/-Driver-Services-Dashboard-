@@ -18,6 +18,88 @@ const S = { // inline style helpers
   label: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:.8, color:'#64748b', marginBottom:8 },
 }
 
+function EditModal({ rec, onClose, onSave }) {
+  const [form, setForm] = useState({ ...rec })
+  const [saving, setSaving] = useState(false)
+  const set = (k,v) => setForm(f=>({...f,[k]:v}))
+  async function save() {
+    setSaving(true)
+    try { await onSave(form); onClose() }
+    catch(e) { toast.error(e.message) }
+    finally { setSaving(false) }
+  }
+  return (
+    <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="modal-box">
+        <div className="modal-header">
+          <div className="modal-title">Edit Candidate — {rec.full_name}</div>
+          <button className="modal-close" onClick={onClose}>✕</button>
+        </div>
+        <div className="modal-body">
+          <div className="form-row c2">
+            <div className="form-group"><label className="form-label">Full Name</label><input className="form-input" value={form.full_name||''} onChange={e=>set('full_name',e.target.value)}/></div>
+            <div className="form-group"><label className="form-label">Nationality</label><input className="form-input" value={form.nationality||''} onChange={e=>set('nationality',e.target.value)}/></div>
+          </div>
+          <div className="form-row c2">
+            <div className="form-group"><label className="form-label">Company</label>
+              <select className="form-select" value={form.company||''} onChange={e=>set('company',e.target.value)}>
+                {['Reach','Omnix','Expert plus','Okool PB','Ultimate1','Ultimate2','Alsundus'].map(c=><option key={c}>{c}</option>)}
+              </select>
+            </div>
+            <div className="form-group"><label className="form-label">Status</label>
+              <select className="form-select" value={form.status||''} onChange={e=>set('status',e.target.value)}>
+                {['On Board','Not Shortlisted','Shortlisted','Not Interested','Security Rejected','Pipeline','Upcoming Interview','Road Test Fail'].map(s=><option key={s}>{s}</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="form-row c2">
+            <div className="form-group"><label className="form-label">Road Test</label>
+              <select className="form-select" value={form.road_test_result||''} onChange={e=>set('road_test_result',e.target.value)}>
+                <option value="">--</option><option>pass</option><option>fail</option>
+              </select>
+            </div>
+            <div className="form-group"><label className="form-label">Interview</label>
+              <select className="form-select" value={form.interview_result||''} onChange={e=>set('interview_result',e.target.value)}>
+                <option value="">--</option><option>pass</option><option>fail</option>
+              </select>
+            </div>
+          </div>
+          <div className="form-group"><label className="form-label">Remarks</label><input className="form-input" value={form.remarks||''} onChange={e=>set('remarks',e.target.value)}/></div>
+        </div>
+        <div className="modal-footer">
+          <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
+          <button className="btn btn-primary" onClick={save} disabled={saving}>{saving?'Saving...':'Save Changes'}</button>
+        </div>
+      </div>
+    {editRec && <EditModal rec={editRec} onClose={()=>setEditRec(null)} onSave={handleEdit}/>}
+      {deleteRec && <ConfirmModal message={`Delete "${deleteRec.full_name}"? This cannot be undone.`} onConfirm={()=>handleDelete(deleteRec)} onClose={()=>setDeleteRec(null)}/>}
+    </div>
+  )
+}
+
+function ConfirmModal({ message, onConfirm, onClose }) {
+  const [busy, setBusy] = useState(false)
+  return (
+    <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="modal-box" style={{maxWidth:400}}>
+        <div className="modal-header">
+          <div className="modal-title">Confirm Delete</div>
+          <button className="modal-close" onClick={onClose}>✕</button>
+        </div>
+        <div className="modal-body"><p style={{margin:0,color:'#475569'}}>{message}</p></div>
+        <div className="modal-footer">
+          <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
+          <button className="btn btn-primary" style={{background:'#dc2626',borderColor:'#dc2626'}} disabled={busy} onClick={async()=>{setBusy(true);await onConfirm();setBusy(false)}}>
+            {busy?'Deleting...':'Delete'}
+          </button>
+        </div>
+      </div>
+    {editRec && <EditModal rec={editRec} onClose={()=>setEditRec(null)} onSave={handleEdit}/>}
+      {deleteRec && <ConfirmModal message={`Delete "${deleteRec.full_name}"? This cannot be undone.`} onConfirm={()=>handleDelete(deleteRec)} onClose={()=>setDeleteRec(null)}/>}
+    </div>
+  )
+}
+
 export default function Recruitment() {
   const { isAdmin } = useStore()
   const [recs, setRecs]           = useState([])
@@ -28,6 +110,8 @@ export default function Recruitment() {
   const [search, setSearch]       = useState('')
   const [filters, setFilters]     = useState({})
   const [slicerOpen, setSlicerOpen] = useState(true)
+  const [editRec, setEditRec]     = useState(null)
+  const [deleteRec, setDeleteRec] = useState(null)
   const fileRef = useRef()
   const LIMIT = 100
 
@@ -55,6 +139,20 @@ export default function Recruitment() {
 
   function resetAll() {
     setFilters({}); setSearch(''); load(1, {}, '')
+  }
+
+  async function handleEdit(data) {
+    const updated = await api.updateRecruitment(data.id, data)
+    setRecs(prev => prev.map(r => r.id===updated.id ? updated : r))
+    toast.success('Candidate updated')
+  }
+
+  async function handleDelete(rec) {
+    await api.deleteRecruitment(rec.id)
+    setRecs(prev => prev.filter(r => r.id !== rec.id))
+    setTotal(t => t-1)
+    setDeleteRec(null)
+    toast.success('Candidate deleted')
   }
 
   async function handleCSV(e) {
@@ -193,7 +291,7 @@ export default function Recruitment() {
           <table style={{ width:'100%', borderCollapse:'collapse', fontSize:13 }}>
             <thead>
               <tr style={{ background:'#f8fafc' }}>
-                {['#','Name','Nationality','Company','Road Test','Interview','Status'].map(h => (
+                {['#','Name','Nationality','Company','Road Test','Interview','Status', ...(isAdmin()?['Actions']:[])].map(h => (
                   <th key={h} style={{ padding:'10px 14px', textAlign:'left', fontSize:11, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:.5, borderBottom:'1.5px solid #f1f5f9', whiteSpace:'nowrap' }}>{h}</th>
                 ))}
               </tr>
@@ -215,6 +313,12 @@ export default function Recruitment() {
                   <td style={{ padding:'10px 14px' }}><Tag v={r.road_test_result}/></td>
                   <td style={{ padding:'10px 14px' }}><Tag v={r.interview_result}/></td>
                   <td style={{ padding:'10px 14px' }}><Tag v={r.status}/></td>
+                  {isAdmin() && (
+                    <td style={{ padding:'10px 14px', whiteSpace:'nowrap' }} onClick={e=>e.stopPropagation()}>
+                      <button onClick={()=>setEditRec(r)} style={{fontSize:11,padding:'3px 8px',borderRadius:5,border:'1px solid #e2e8f0',background:'#f8fafc',color:'#334155',cursor:'pointer',marginRight:4}}>Edit</button>
+                      <button onClick={()=>setDeleteRec(r)} style={{fontSize:11,padding:'3px 8px',borderRadius:5,border:'1px solid #fecaca',background:'#fff5f5',color:'#dc2626',cursor:'pointer'}}>Del</button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -232,6 +336,8 @@ export default function Recruitment() {
         </div>
       </div>
 
+    {editRec && <EditModal rec={editRec} onClose={()=>setEditRec(null)} onSave={handleEdit}/>}
+      {deleteRec && <ConfirmModal message={`Delete "${deleteRec.full_name}"? This cannot be undone.`} onConfirm={()=>handleDelete(deleteRec)} onClose={()=>setDeleteRec(null)}/>}
     </div>
   )
 }

@@ -359,5 +359,28 @@ app.post('/api/upload/csv', auth, adminOnly, async (req, res) => {
   } catch (err) { console.error(err); res.status(500).json({ error: err.message }); }
 });
 
+app.put('/api/recruitment/:id', auth, adminOnly, async (req, res) => {
+  try {
+    const d = req.body;
+    const rows = await sql`UPDATE recruitment SET
+      full_name=COALESCE(${d.full_name||null},full_name),
+      nationality=COALESCE(${d.nationality||null},nationality),
+      company=COALESCE(${d.company||null},company),
+      road_test_result=COALESCE(${d.road_test_result||null},road_test_result),
+      interview_result=COALESCE(${d.interview_result||null},interview_result),
+      status=COALESCE(${d.status||null},status),
+      remarks=COALESCE(${d.remarks||null},remarks)
+      WHERE id=${req.params.id} AND is_deleted=FALSE RETURNING *`;
+    res.json(rows[0]);
+  } catch(err) { res.status(500).json({ error: err.message }); }
+});
+
+app.delete('/api/recruitment/:id', auth, adminOnly, async (req, res) => {
+  try {
+    await sql`UPDATE recruitment SET is_deleted=TRUE WHERE id=${req.params.id}`;
+    res.json({ ok: true });
+  } catch(err) { res.status(500).json({ error: err.message }); }
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));

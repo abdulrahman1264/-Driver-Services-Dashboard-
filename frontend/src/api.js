@@ -38,6 +38,8 @@ export const api = {
   getRecruitment: (params={}) => req('/recruitment?' + new URLSearchParams(params)),
   getAnalytics:   ()          => req('/analytics'),
   uploadCSV:      (type, csvData) => req('/upload/csv', { method: 'POST', body: { type, csvData } }),
+  updateRecruitment: (id, data) => req(`/recruitment/${id}`, { method: 'PUT', body: data }),
+  deleteRecruitment: (id)       => req(`/recruitment/${id}`, { method: 'DELETE' }),
   getUsers:       ()          => req('/users'),
   addUser:        (data)      => req('/users', { method: 'POST', body: data }),
   deleteUser:     (id)        => req(`/users/${id}`, { method: 'DELETE' }),
