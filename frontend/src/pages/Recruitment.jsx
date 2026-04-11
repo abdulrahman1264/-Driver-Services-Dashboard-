@@ -44,7 +44,7 @@ export default function Recruitment() {
       const res = await api.getRecruitment(params)
       setRecs(res.data); setTotal(res.total); setPage(p)
     } catch(e) { toast.error(e.message) }
-    finally { setFiltering(false) }
+    finally { setLoading(false) }
   }
 
   function applyFilter(k, v) {
