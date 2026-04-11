@@ -4,7 +4,7 @@ import { useStore } from '../store'
 import toast from 'react-hot-toast'
 
 export default function Settings() {
-  const { user, isAdmin } = useStore()
+  const { user, isAdmin, lang, setLang, t } = useStore()
   const [tab, setTab]     = useState('general')
   const [users, setUsers] = useState([])
   const [form, setForm]   = useState({ username:'', email:'', password:'', role:'Viewer' })
@@ -47,9 +47,9 @@ export default function Settings() {
       <div className="page-body">
         <div style={{background:'#fff',borderRadius:12,border:'1.5px solid #e2e8f0',overflow:'hidden'}}>
           <div className="stabs" style={{padding:'0 24px'}}>
-            {['general','users','security'].map(t=>(
-              <button key={t} className={`stab ${tab===t?'active':''}`} onClick={()=>setTab(t)}>
-                {t.charAt(0).toUpperCase()+t.slice(1)}
+            {[['general','General','عام'],['users','Users','المستخدمون'],['security','Security','الأمان'],['language','Language','اللغة']].map(([key,en,ar])=>(
+              <button key={key} className={`stab ${tab===key?'active':''}`} onClick={()=>setTab(key)}>
+                {lang==='ar' ? ar : en}
               </button>
             ))}
           </div>
@@ -108,6 +108,32 @@ export default function Settings() {
                     )}
                   </div>
                 ))}
+              </div>
+            )}
+
+            {tab==='language' && (
+              <div>
+                <div style={{marginBottom:24}}>
+                  <div style={{fontSize:14,fontWeight:700,color:'#0f2044',marginBottom:6}}>{t('language_label')}</div>
+                  <div style={{fontSize:13,color:'#64748b',marginBottom:20}}>{lang==='ar' ? 'اختر لغة الواجهة' : 'Choose the interface language. The page will switch instantly.'}</div>
+                  <div style={{display:'flex',gap:12,flexWrap:'wrap'}}>
+                    {[['en','English 🇬🇧'],['ar','العربية 🇦🇪']].map(([code,label])=>(
+                      <button key={code} onClick={()=>setLang(code)} style={{
+                        padding:'14px 28px', borderRadius:10, fontSize:14, fontWeight:700, cursor:'pointer',
+                        border: lang===code ? '2px solid #2563eb' : '1.5px solid #e2e8f0',
+                        background: lang===code ? '#eff6ff' : '#fff',
+                        color: lang===code ? '#1d4ed8' : '#374151',
+                        transition:'all .15s', minWidth:140, textAlign:'center'
+                      }}>
+                        {label}
+                        {lang===code && <div style={{fontSize:11,fontWeight:600,color:'#2563eb',marginTop:4}}>{lang==='ar'?'✓ مفعّل':'✓ Active'}</div>}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div style={{padding:14,background:'#f0fdf4',borderRadius:8,fontSize:13,color:'#166534',border:'1px solid #bbf7d0'}}>
+                  {lang==='ar' ? '✓ اللغة العربية مفعّلة — الواجهة تعمل من اليمين إلى اليسار' : '✓ Language change applies instantly across all pages.'}
+                </div>
               </div>
             )}
 
