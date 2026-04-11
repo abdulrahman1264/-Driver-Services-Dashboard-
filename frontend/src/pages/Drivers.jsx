@@ -243,7 +243,7 @@ export default function Drivers() {
   const [drivers, setDrivers]   = useState([])
   const [total, setTotal]       = useState(0)
   const [loading, setLoading]   = useState(true)
-const [filtering, setFiltering] = useState(false)
+  const [filtering, setFiltering] = useState(false)
   const [selected, setSelected] = useState(null)
   const [editDriver, setEditDriver] = useState(null)
   const [deleteDriver, setDeleteDriver] = useState(null)
@@ -263,7 +263,7 @@ const [filtering, setFiltering] = useState(false)
       const res = await api.getDrivers(params)
       setDrivers(res.data); setTotal(res.total); setPage(p)
     } catch(e) { toast.error(e.message) }
-    finally { setFiltering(false) }
+    finally { setLoading(false); setFiltering(false) }
   }
 
   useEffect(() => { load() }, [])
