@@ -71,8 +71,6 @@ function EditModal({ rec, onClose, onSave }) {
           <button className="btn btn-primary" onClick={save} disabled={saving}>{saving?'Saving...':'Save Changes'}</button>
         </div>
       </div>
-    {editRec && <EditModal rec={editRec} onClose={()=>setEditRec(null)} onSave={handleEdit}/>}
-      {deleteRec && <ConfirmModal message={`Delete "${deleteRec.full_name}"? This cannot be undone.`} onConfirm={()=>handleDelete(deleteRec)} onClose={()=>setDeleteRec(null)}/>}
     </div>
   )
 }
@@ -94,8 +92,6 @@ function ConfirmModal({ message, onConfirm, onClose }) {
           </button>
         </div>
       </div>
-    {editRec && <EditModal rec={editRec} onClose={()=>setEditRec(null)} onSave={handleEdit}/>}
-      {deleteRec && <ConfirmModal message={`Delete "${deleteRec.full_name}"? This cannot be undone.`} onConfirm={()=>handleDelete(deleteRec)} onClose={()=>setDeleteRec(null)}/>}
     </div>
   )
 }
