@@ -60,6 +60,15 @@ const AR = {
   password: 'كلمة المرور', role: 'الدور', administrator: 'مدير', viewer: 'مشاهد',
   // KPI
   kpi_total: 'الإجمالي', kpi_active: 'نشط', kpi_terminated: 'منتهي', kpi_recruitment: 'التوظيف',
+  good_morning: 'صباح الخير', good_afternoon: 'مساء الخير', good_evening: 'مساء الخير',
+  home_banner_title: 'لوحة تحكم عمليات خدمات السائقين',
+  home_banner_sub: 'نظرة عامة لحظية على امتثال السائقين ومسار التوظيف والرواتب عبر جميع المستودعات.',
+  home_drivers_desc: 'سجلات السائقين الكاملة والحالة والمستودع وتوزيع الجنسيات.',
+  home_docs_desc: 'حالة انتهاء الرخصة والجواز والتأشيرة والفحص الطبي مع تنبيهات حرجة.',
+  home_rec_desc: 'نتائج اختبار الطريق ونتائج المقابلات وحالة الالتحاق.',
+  home_term_desc: 'سجلات السائقين المنتهية خدمتهم مع أسباب الاستقالة والتواريخ.',
+  home_analytics_desc: 'اتجاهات التوظيف ومقارنات المستودعات وتوزيع الجنسيات وتقارير الوثائق.',
+  home_chart_modules: 'وحدات الرسم البياني', home_modules: 'الوحدات', expiring_soon: 'تنتهي خلال 30 يوماً',
 }
 
 const EN = {
@@ -111,23 +120,18 @@ const EN = {
   add_user: 'Add User', username: 'Username', email: 'Email',
   password: 'Password', role: 'Role', administrator: 'Administrator', viewer: 'Viewer',
   kpi_total: 'Total', kpi_active: 'Active', kpi_terminated: 'Terminated', kpi_recruitment: 'Recruitment',
-  good_morning: 'صباح الخير', good_afternoon: 'مساء الخير', good_evening: 'مساء الخير',
-  home_banner_title: 'لوحة تحكم عمليات خدمات السائقين',
-  home_banner_sub: 'نظرة عامة لحظية على امتثال السائقين ومسار التوظيف والرواتب عبر جميع المستودعات.',
-  home_drivers_desc: 'سجلات السائقين الكاملة والحالة والمستودع وتوزيع الجنسيات.',
-  home_docs_desc: 'حالة انتهاء الرخصة والجواز والتأشيرة والفحص الطبي مع تنبيهات حرجة.',
-  home_rec_desc: 'نتائج اختبار الطريق ونتائج المقابلات وحالة الالتحاق.',
-  home_term_desc: 'سجلات السائقين المنتهية خدمتهم مع أسباب الاستقالة والتواريخ.',
-  home_analytics_desc: 'اتجاهات التوظيف ومقارنات المستودعات وتوزيع الجنسيات وتقارير الوثائق.',
-  home_chart_modules: 'وحدات الرسم البياني', home_modules: 'الوحدات', expiring_soon: 'تنتهي خلال 30 يوماً',
+  good_morning: 'Good morning', good_afternoon: 'Good afternoon', good_evening: 'Good evening',
+  home_banner_title: 'Driver Services Operations Dashboard',
+  home_banner_sub: 'Real-time overview of driver compliance, recruitment pipeline and payroll data across all depots.',
+  home_drivers_desc: 'Full driver records, status, depot and nationality breakdown.',
+  home_docs_desc: 'License, passport, visa and medical expiry with critical alerts.',
+  home_rec_desc: 'Road test results, interview outcomes and onboarding status.',
+  home_term_desc: 'Terminated driver records with resignation reasons and dates.',
+  home_analytics_desc: 'Hire trends, depot comparisons, nationality breakdown and document reports.',
+  home_chart_modules: 'Chart modules', home_modules: 'Modules', expiring_soon: 'expiring <30d',
 }
 
 export const TRANSLATIONS = { en: EN, ar: AR }
-
-export const useTranslation = () => {
-  const lang = useStore(s => s.lang)
-  return (key) => TRANSLATIONS[lang]?.[key] || TRANSLATIONS.en[key] || key
-}
 
 export const useStore = create((set, get) => ({
   user: JSON.parse(localStorage.getItem('ds_user') || 'null'),
