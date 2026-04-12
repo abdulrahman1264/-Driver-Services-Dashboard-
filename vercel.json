@@ -1,7 +1,7 @@
 {
     "version": 2,
-    "buildCommand": "cd frontend && npm install --include=dev && npx vite build",
-    "outputDirectory": "frontend/dist",
+    "buildCommand": "npm install --include=dev && npx vite build",
+    "outputDirectory": "dist",
     "functions": {
       "api/**/*.js": {
         "runtime": "nodejs20.x"
