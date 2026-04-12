@@ -223,7 +223,7 @@ export default function Recruitment() {
       )}
 
       {/* KPI cards */}
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:12 }}>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))', gap:12 }}>
         {[
           [t('on_board'),       onboard,    '#059669', '#f0fdf4'],
           [t('shortlisted'),    shortlist,  '#1d4ed8', '#eff6ff'],

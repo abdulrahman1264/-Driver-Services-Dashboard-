@@ -106,7 +106,7 @@ export default function Home() {
       {/* Compliance alerts */}
       <div>
         <div style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:1, color:'#94a3b8', marginBottom:10 }}>⚠ {t('compliance_alerts')}</div>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:12 }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))', gap:12 }}>
           {ALERTS.map(a => (
             <div key={a.label} onClick={() => navigate(a.to)}
               style={{ background:'#fff', borderRadius:10, border:`1.5px solid ${a.color}22`, padding:'14px 16px', cursor:'pointer', transition:'all .18s' }}
@@ -124,7 +124,7 @@ export default function Home() {
       {/* Module cards */}
       <div>
         <div style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:1, color:'#94a3b8', marginBottom:10 }}>{t('home_modules')}</div>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:14 }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))', gap:14 }}>
           {MODULES.map(m => (
             <div key={m.to} onClick={() => navigate(m.to)}
               style={{ background:'#fff', borderRadius:12, border:'1.5px solid #e2e8f0', padding:20, cursor:'pointer', transition:'all .18s', position:'relative', overflow:'hidden' }}

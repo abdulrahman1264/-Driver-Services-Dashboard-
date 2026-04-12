@@ -312,3 +312,8 @@
     .modal-footer { padding: 12px 16px; }
     .pipeline { grid-template-columns: 1fr; }
   }
+  @media (max-width: 768px) {
+    .sb-sidebar { display: none !important; }
+    .sb-sidebar.open { display: flex !important; position: fixed; top: 0; left: 0; height: 100vh; z-index: 100; }
+    .mob-topbar { display: flex !important; }
+  }
