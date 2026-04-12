@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
-import { useStore } from '../../store'
-import { useStore } from '../store'
+import { useStore } from '../../store.js'
 import toast from 'react-hot-toast'
 
 const NAV_KEYS = [
@@ -15,6 +14,7 @@ const NAV_KEYS = [
 ]
 
 export default function Layout() {
+  const { user, clearAuth, t } = useStore()
   const NAV = NAV_KEYS.map(n => ({ ...n, label: t(n.key) }))
   const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(false)
