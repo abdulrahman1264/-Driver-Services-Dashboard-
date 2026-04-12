@@ -3,6 +3,7 @@ import { useStore } from '../store'
 import { useEffect, useState } from 'react'
 import { api } from '../api'
 
+// v2
 export default function Home() {
   const { user, t } = useStore()
   const navigate = useNavigate()
@@ -149,15 +150,5 @@ export default function Home() {
       </div>
 
     </div>
-
-      {editRec && <EditModal rec={editRec} onClose={()=>setEditRec(null)} onSave={handleEdit} t={t}/>}
-      {deleteRec && (
-        <ConfirmModal
-          message={`${t('delete')} "${deleteRec.full_name}"?`}
-          onConfirm={()=>handleDelete(deleteRec)}
-          onClose={()=>setDeleteRec(null)}
-          t={t}
-        />
-      )}
   )
 }
