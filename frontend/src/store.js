@@ -120,14 +120,6 @@ const EN = {
   home_term_desc: 'سجلات السائقين المنتهية خدمتهم مع أسباب الاستقالة والتواريخ.',
   home_analytics_desc: 'اتجاهات التوظيف ومقارنات المستودعات وتوزيع الجنسيات وتقارير الوثائق.',
   home_chart_modules: 'وحدات الرسم البياني', home_modules: 'الوحدات', expiring_soon: 'تنتهي خلال 30 يوماً',
-  expiring_soon_warning: 'يوجد وثائق تنتهي خلال 30 يوماً', expiring_soon_critical: 'يوجد وثائق تنتهي خلال 90 يوماً',
-  expiring_soon_warning_color: '#f59e0b', expiring_soon_critical_color: '#ef4444',
-  expiring_soon_warning_text: 'تحذير', expiring_soon_critical_text: 'حرج',
-  expiring_soon_warning_icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/></svg>,
-  expiring_soon_critical_icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/></svg>,
-  expiring_soon_warning_text: 'تحذير', expiring_soon_critical_text: 'حرج',
-  expiring_soon_warning_icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/></svg>,
-  expiring_soon_critical_icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/></svg>,
 }
 
 export const TRANSLATIONS = { en: EN, ar: AR }
