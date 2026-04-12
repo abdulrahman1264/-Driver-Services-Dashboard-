@@ -38,7 +38,7 @@ export default function Layout() {
         transition: 'width .25s ease, min-width .25s ease',
         overflow: 'hidden', position: 'relative', zIndex: 10,
         boxShadow: '2px 0 12px rgba(0,0,0,.18)'
-      }} className={`sb-sidebar ${mobileOpen ? 'open' : ''}`}>
+      }} className={`sb-sidebar${mobileOpen ? ' open' : ''}`}>
         <div style={{ display:'flex', alignItems:'center', justifyContent: collapsed ? 'center' : 'space-between', padding: collapsed ? '20px 0' : '20px 16px', borderBottom:'1px solid rgba(255,255,255,.07)', minHeight:72 }}>
           {!collapsed && (
             <div style={{ display:'flex', alignItems:'center', gap:10, overflow:'hidden' }}>

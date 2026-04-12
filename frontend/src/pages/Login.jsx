@@ -35,7 +35,7 @@ export default function Login() {
   return (
     <div style={{ display:'flex', height:'100vh', background:'#0f2044' }}>
       {/* Left */}
-      <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', padding:'60px', position:'relative', overflow:'hidden' }}>
+      <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', padding:'60px', position:'relative', overflow:'hidden' }} className="login-left">
         <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:64 }}>
           <div style={{ width:48, height:48, borderRadius:12, background:'#2563eb', display:'flex', alignItems:'center', justifyContent:'center' }}>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#fff" strokeWidth="2.5" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
