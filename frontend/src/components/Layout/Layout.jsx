@@ -112,7 +112,7 @@ export default function Layout() {
 
       <div style={{ flex:1, display:'flex', flexDirection:'column', overflow:'hidden' }}>
         {/* Mobile topbar */}
-        <div style={{ display:'none', alignItems:'center', gap:10, padding:'0 14px', height:52, background:'#fff', borderBottom:'1px solid #e2e8f0', flexShrink:0 }} className="mob-topbar">
+        <div style={{ display:'flex', alignItems:'center', gap:10, padding:'0 14px', height:52, background:'#fff', borderBottom:'1px solid #e2e8f0', flexShrink:0 }} className="mob-topbar">
           <button className="mob-menu-btn" onClick={()=>setMobileOpen(o=>!o)}>
             <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>

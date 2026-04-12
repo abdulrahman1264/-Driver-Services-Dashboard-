@@ -62,7 +62,7 @@ export default function Login() {
       </div>
 
       {/* Right */}
-      <div style={{ width:460, display:'flex', alignItems:'center', justifyContent:'center', padding:40, background:'#fff' }}>
+      <div style={{ width:'100%', maxWidth:460, display:'flex', alignItems:'center', justifyContent:'center', padding:40, background:'#fff' }}>
         <div style={{ width:'100%', maxWidth:360 }}>
           <div style={{ fontSize:26, fontWeight:800, color:'#0f2044', marginBottom:4, letterSpacing:'-.5px' }}>Welcome back</div>
           <div style={{ fontSize:13.5, color:'#64748b', marginBottom:32 }}>Sign in to access the dashboard</div>
