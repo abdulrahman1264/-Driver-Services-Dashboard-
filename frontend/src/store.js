@@ -4,7 +4,7 @@ const AR = {
   // Nav
   home: 'الرئيسية', drivers: 'ملفات السائقين', documents: 'الامتثال الوثائقي',
   recruitment: 'التوظيف', terminated: 'السائقون المنتهية خدمتهم',
-  analytics: 'التحليلات', settings: 'الإعدادات', logout: 'تسجيل الخروج',
+  analytics: 'التحليلات', settings: 'الإعدادات', logout: 'تسجيل الخروج', logged_out: 'تم تسجيل الخروج',
   // Common
   search: 'بحث', reset: 'إعادة تعيين', save: 'حفظ', cancel: 'إلغاء',
   delete: 'حذف', edit: 'تعديل', add: 'إضافة', import_csv: 'استيراد CSV',
@@ -65,7 +65,7 @@ const AR = {
 const EN = {
   home: 'Home', drivers: 'Drivers Profile', documents: 'Document Compliance',
   recruitment: 'Recruitment', terminated: 'Terminated Drivers',
-  analytics: 'Analytics', settings: 'Settings', logout: 'Logout',
+  analytics: 'Analytics', settings: 'Settings', logout: 'Logout', logged_out: 'Logged out',
   search: 'Search', reset: 'Reset', save: 'Save', cancel: 'Cancel',
   delete: 'Delete', edit: 'Edit', add: 'Add', import_csv: 'Import CSV',
   slicers: 'Slicers', filters: 'Filters', print: 'Print Report',
@@ -111,6 +111,23 @@ const EN = {
   add_user: 'Add User', username: 'Username', email: 'Email',
   password: 'Password', role: 'Role', administrator: 'Administrator', viewer: 'Viewer',
   kpi_total: 'Total', kpi_active: 'Active', kpi_terminated: 'Terminated', kpi_recruitment: 'Recruitment',
+  good_morning: 'صباح الخير', good_afternoon: 'مساء الخير', good_evening: 'مساء الخير',
+  home_banner_title: 'لوحة تحكم عمليات خدمات السائقين',
+  home_banner_sub: 'نظرة عامة لحظية على امتثال السائقين ومسار التوظيف والرواتب عبر جميع المستودعات.',
+  home_drivers_desc: 'سجلات السائقين الكاملة والحالة والمستودع وتوزيع الجنسيات.',
+  home_docs_desc: 'حالة انتهاء الرخصة والجواز والتأشيرة والفحص الطبي مع تنبيهات حرجة.',
+  home_rec_desc: 'نتائج اختبار الطريق ونتائج المقابلات وحالة الالتحاق.',
+  home_term_desc: 'سجلات السائقين المنتهية خدمتهم مع أسباب الاستقالة والتواريخ.',
+  home_analytics_desc: 'اتجاهات التوظيف ومقارنات المستودعات وتوزيع الجنسيات وتقارير الوثائق.',
+  home_chart_modules: 'وحدات الرسم البياني', home_modules: 'الوحدات', expiring_soon: 'تنتهي خلال 30 يوماً',
+  expiring_soon_warning: 'يوجد وثائق تنتهي خلال 30 يوماً', expiring_soon_critical: 'يوجد وثائق تنتهي خلال 90 يوماً',
+  expiring_soon_warning_color: '#f59e0b', expiring_soon_critical_color: '#ef4444',
+  expiring_soon_warning_text: 'تحذير', expiring_soon_critical_text: 'حرج',
+  expiring_soon_warning_icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/></svg>,
+  expiring_soon_critical_icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/></svg>,
+  expiring_soon_warning_text: 'تحذير', expiring_soon_critical_text: 'حرج',
+  expiring_soon_warning_icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/></svg>,
+  expiring_soon_critical_icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/></svg>,
 }
 
 export const TRANSLATIONS = { en: EN, ar: AR }

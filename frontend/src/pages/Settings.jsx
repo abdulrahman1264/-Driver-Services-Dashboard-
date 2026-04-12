@@ -40,7 +40,7 @@ export default function Settings() {
           <div className="dh-icon" style={{background:'#f1f5f9',color:'#475569'}}>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           </div>
-          <div><div className="dh-title">Settings</div><div className="dh-sub">Manage users, preferences and security</div></div>
+          <div><div className="dh-title">{t('settings_title')}</div><div className="dh-sub">{t('language_label')}</div></div>
         </div>
       </div>
 
@@ -62,8 +62,8 @@ export default function Settings() {
                   <div className="form-group"><label className="form-label">Organisation</label><input className="form-input" defaultValue="Roads & Transport Authority"/></div>
                 </div>
                 <div className="form-row c2">
-                  <div className="form-group"><label className="form-label">Logged in as</label><input className="form-input" value={user?.username} readOnly style={{background:'#f8fafc'}}/></div>
-                  <div className="form-group"><label className="form-label">Role</label><input className="form-input" value={user?.role} readOnly style={{background:'#f8fafc'}}/></div>
+                  <div className="form-group"><label className="form-label">{t('username')}</label><input className="form-input" value={user?.username} readOnly style={{background:'#f8fafc'}}/></div>
+                  <div className="form-group"><label className="form-label">{t('role')}</label><input className="form-input" value={user?.role} readOnly style={{background:'#f8fafc'}}/></div>
                 </div>
               </div>
             )}
@@ -76,20 +76,20 @@ export default function Settings() {
 
                 {isAdmin() && (
                   <div style={{background:'#f8fafc',borderRadius:8,border:'1px solid #e2e8f0',padding:18,marginBottom:20}}>
-                    <div style={{fontSize:13,fontWeight:700,color:'#0f2044',marginBottom:14}}>Add New User</div>
+                    <div style={{fontSize:13,fontWeight:700,color:'#0f2044',marginBottom:14}}>{t('add_user')}</div>
                     <div className="form-row c2">
-                      <div className="form-group"><label className="form-label">Username</label><input className="form-input" placeholder="username" value={form.username} onChange={e=>setForm(f=>({...f,username:e.target.value}))}/></div>
-                      <div className="form-group"><label className="form-label">Email</label><input className="form-input" type="email" placeholder="email@domain.com" value={form.email} onChange={e=>setForm(f=>({...f,email:e.target.value}))}/></div>
+                      <div className="form-group"><label className="form-label">{t('username')}</label><input className="form-input" placeholder="username" value={form.username} onChange={e=>setForm(f=>({...f,username:e.target.value}))}/></div>
+                      <div className="form-group"><label className="form-label">{t('password')}</label><input className="form-input" type="email" placeholder="email@domain.com" value={form.email} onChange={e=>setForm(f=>({...f,email:e.target.value}))}/></div>
                     </div>
                     <div className="form-row c2" style={{marginBottom:0}}>
-                      <div className="form-group"><label className="form-label">Password</label><input className="form-input" type="password" placeholder="Min 6 characters" value={form.password} onChange={e=>setForm(f=>({...f,password:e.target.value}))}/></div>
-                      <div className="form-group"><label className="form-label">Role</label>
+                      <div className="form-group"><label className="form-label">{t('password')}</label><input className="form-input" type="password" placeholder="Min 6 characters" value={form.password} onChange={e=>setForm(f=>({...f,password:e.target.value}))}/></div>
+                      <div className="form-group"><label className="form-label">{t('role')}</label>
                         <select className="form-select" value={form.role} onChange={e=>setForm(f=>({...f,role:e.target.value}))}>
-                          <option>Administrator</option><option>Viewer</option>
+                          <option>{t('administrator')}</option><option>{t('viewer')}</option>
                         </select>
                       </div>
                     </div>
-                    <button className="btn btn-primary" style={{marginTop:14}} onClick={addUser}>Add User</button>
+                    <button className="btn btn-primary" style={{marginTop:14}} onClick={addUser}>{t('add_user')}</button>
                   </div>
                 )}
 
@@ -104,7 +104,7 @@ export default function Settings() {
                     </div>
                     <span style={{padding:'3px 10px',borderRadius:99,fontSize:11,fontWeight:600,background:u.role==='Administrator'?'#eff6ff':'#f1f5f9',color:u.role==='Administrator'?'#1d4ed8':'#475569'}}>{u.role}</span>
                     {isAdmin() && u.username !== 'admin' && (
-                      <button className="btn btn-ghost" style={{padding:'5px 10px',fontSize:12,color:'#dc2626',borderColor:'#fca5a5'}} onClick={()=>removeUser(u.id,u.username)}>Remove</button>
+                      <button className="btn btn-ghost" style={{padding:'5px 10px',fontSize:12,color:'#dc2626',borderColor:'#fca5a5'}} onClick={()=>removeUser(u.id,u.username)}>{t('delete')}</button>
                     )}
                   </div>
                 ))}

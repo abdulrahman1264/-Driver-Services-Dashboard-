@@ -4,6 +4,10 @@ import { Toaster } from 'react-hot-toast'
 import App from './App.jsx'
 import './index.css'
 
+const savedLang = localStorage.getItem('ds_lang') || 'en'
+document.documentElement.lang = savedLang
+document.documentElement.dir = savedLang === 'ar' ? 'rtl' : 'ltr'
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />

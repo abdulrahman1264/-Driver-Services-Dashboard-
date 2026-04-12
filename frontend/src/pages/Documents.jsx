@@ -3,7 +3,7 @@ import { api } from '../api'
 import { useStore } from '../store'
 import toast from 'react-hot-toast'
 
-function DocCard({ title, data, color, severity, onClick, active }) {
+function DocCard({ title, data, color, severity, onClick, active, t }) {
   const total = (data.expired||0)+(data.d30||0)+(data.d90||0)+(data.valid||0)
   const pct = total ? Math.round((data.expired||0)/total*100) : 0
   return (
@@ -13,10 +13,10 @@ function DocCard({ title, data, color, severity, onClick, active }) {
         <div style={{padding:'3px 9px',borderRadius:99,fontSize:10.5,fontWeight:700,background:severity==='CRITICAL'?'#fef2f2':'#fffbeb',color:severity==='CRITICAL'?'#dc2626':'#d97706'}}>{severity}</div>
       </div>
       <div style={{fontSize:28,fontWeight:800,color}}>{(data.expired||0).toLocaleString()}</div>
-      <div style={{fontSize:11.5,color:'#64748b',marginBottom:10}}>expired</div>
+      <div style={{fontSize:11.5,color:'#64748b',marginBottom:10}}>{t('expired')}</div>
       <div className="doc-meter"><div className="doc-fill" style={{width:pct+'%',background:color}}/></div>
       <div className="doc-stats">
-        {[[(data.expired||0),'Expired','#dc2626'],[(data.d30||0),'<30d','#d97706'],[(data.d90||0),'<90d','#d97706'],[(data.valid||0),'Valid','#059669']].map(([v,l,c])=>(
+        {[[(data.expired||0),t('expired'),'#dc2626'],[(data.d30||0),'<30d','#d97706'],[(data.d90||0),'<90d','#d97706'],[(data.valid||0),t('valid'),'#059669']].map(([v,l,c])=>(
           <div key={l} className="doc-stat-item"><div className="doc-stat-val" style={{color:c}}>{Number(v).toLocaleString()}</div><div className="doc-stat-lbl">{l}</div></div>
         ))}
       </div>
@@ -25,7 +25,7 @@ function DocCard({ title, data, color, severity, onClick, active }) {
 }
 
 export default function Documents() {
-  const { isAdmin } = useStore()
+  const { isAdmin, t } = useStore()
   const [analytics, setAnalytics] = useState(null)
   const [drivers, setDrivers]     = useState([])
   const [total, setTotal]         = useState(0)
@@ -95,10 +95,10 @@ export default function Documents() {
 
   const docs = analytics?.documents || {}
   const docCards = [
-    { key:'lic',  title:'Driving License',        color:'#dc2626', severity:'CRITICAL', data:{ expired:docs.lic_expired,  d30:docs.lic_30,  d90:docs.lic_90,  valid:docs.lic_valid  }},
-    { key:'pass', title:'Passport',               color:'#d97706', severity:'WARNING',  data:{ expired:docs.pass_expired, d30:docs.pass_30, d90:0,            valid:docs.pass_valid }},
-    { key:'visa', title:'Visa',                   color:'#dc2626', severity:'CRITICAL', data:{ expired:docs.visa_expired, d30:docs.visa_30, d90:0,            valid:docs.visa_valid }},
-    { key:'med',  title:'Occupational Medical',   color:'#dc2626', severity:'CRITICAL', data:{ expired:docs.med_expired,  d30:docs.med_30,  d90:0,            valid:docs.med_valid  }},
+    { key:'lic',  title:t('license'),             color:'#dc2626', severity:t('critical'), data:{ expired:docs.lic_expired,  d30:docs.lic_30,  d90:docs.lic_90,  valid:docs.lic_valid  }},
+    { key:'pass', title:t('passport'),            color:'#d97706', severity:t('warning'),  data:{ expired:docs.pass_expired, d30:docs.pass_30, d90:0,            valid:docs.pass_valid }},
+    { key:'visa', title:t('visa'),                color:'#dc2626', severity:t('critical'), data:{ expired:docs.visa_expired, d30:docs.visa_30, d90:0,            valid:docs.visa_valid }},
+    { key:'med',  title:t('medical'),             color:'#dc2626', severity:t('critical'), data:{ expired:docs.med_expired,  d30:docs.med_30,  d90:0,            valid:docs.med_valid  }},
   ]
 
   function expTag(dateStr) {
@@ -122,34 +122,34 @@ export default function Documents() {
           <div className="dh-icon" style={{background:'#fef2f2',color:'#dc2626'}}>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           </div>
-          <div><div className="dh-title">Document Compliance</div><div className="dh-sub">License, passport, visa and medical expiry status</div></div>
+          <div><div className="dh-title">{t('doc_title')}</div><div className="dh-sub">{t('doc_sub')}</div></div>
         </div>
         <div className="dh-actions">
-          <button className="btn btn-ghost" onClick={()=>setSlicerOpen(s=>!s)}>Slicers</button>
+          <button className="btn btn-ghost" onClick={()=>setSlicerOpen(s=>!s)}>{t('slicers')}</button>
           {isAdmin() && <>
             <input ref={fileRef} type="file" accept=".csv" style={{display:'none'}} onChange={handleCSV}/>
             <button className="btn btn-ghost" onClick={()=>fileRef.current.click()}>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
-              Import CSV
+              {t('import_csv')}
             </button>
           </>}
         </div>
       </div>
 
       <div className={`slicer-bar ${slicerOpen?'open':''}`}>
-        <span className="slicer-label">Slicers</span>
+        <span className="slicer-label">{t('slicers')}</span>
         <select className="slicer-select" value={depot} onChange={e=>{setDepot(e.target.value);loadTable(1,e.target.value,activeDoc,docStatus);reloadAnalytics(e.target.value)}}>
-          <option value="">All Depots</option>
+          <option value="">{t('all')} {t('depot')}s</option>
           {['Al Awir','Al Quoz','Jebel Ali','Al Ruwayah','Al Khawaneej','Qusais','Etisalat Depot'].map(d=><option key={d}>{d}</option>)}
         </select>
         <select className="slicer-select" value={docStatus} onChange={e=>{setDocStatus(e.target.value);loadTable(1,depot,activeDoc,e.target.value)}}>
-          <option value="">All Statuses</option>
-          <option value="expired">Expired</option>
-          <option value="soon30">Expiring &lt;30d</option>
-          <option value="soon90">Expiring &lt;90d</option>
-          <option value="valid">Valid</option>
+          <option value="">{t('all')}</option>
+          <option value="expired">{t('expired')}</option>
+          <option value="soon30">{t('expiring_soon')}</option>
+          <option value="soon90">{t('expiring_soon')}</option>
+          <option value="valid">{t('valid')}</option>
         </select>
-        <button className="slicer-reset" onClick={()=>{setDepot('');setDocStatus('');setActiveDoc(null);loadTable(1,'',null,'');reloadAnalytics('')}}>Reset</button>
+        <button className="slicer-reset" onClick={()=>{setDepot('');setDocStatus('');setActiveDoc(null);loadTable(1,'',null,'');reloadAnalytics('')}}>{t('reset')}</button>
         <button className="slicer-close" onClick={()=>setSlicerOpen(false)}>✕</button>
       </div>
 
@@ -164,26 +164,27 @@ export default function Documents() {
               data={c.data}
               active={activeDoc===c.key}
               onClick={()=>{const k=activeDoc===c.key?null:c.key;setActiveDoc(k);loadTable(1,depot,k,docStatus)}}
+              t={t}
             />
           ))}
         </div>
 
         <div className="table-card">
           <div className="table-toolbar">
-            <div className="tt-title">Compliance Records</div>
-            <div className="tt-badge">{filteredDrivers.length.toLocaleString()} records</div>
+            <div className="tt-title">{t('compliance_records')}</div>
+            <div className="tt-badge">{filteredDrivers.length.toLocaleString()} {t('records')}</div>
             {activeDoc && <div className="tt-badge" style={{background:'#fef2f2',color:'#dc2626',cursor:'pointer'}} onClick={()=>{setActiveDoc(null);loadTable(1,depot,null,docStatus)}}>
               {docCards.find(c=>c.key===activeDoc)?.title} ✕
             </div>}
           </div>
           <div className="tbl-wrap">
             <table>
-              <thead><tr><th>#</th><th>Name</th><th>Depot</th><th>License</th><th>Passport</th><th>Visa</th><th>Medical</th><th>ID Card</th></tr></thead>
+              <thead><tr><th>#</th><th>{t('full_name')}</th><th>{t('depot')}</th><th>{t('license')}</th><th>{t('passport')}</th><th>{t('visa')}</th><th>{t('medical')}</th><th>{t('id_card')}</th></tr></thead>
               <tbody>
                 {loading ? (
                   <tr><td colSpan={8} style={{textAlign:'center',padding:40}}><div className="spinner dark" style={{margin:'0 auto'}}/></td></tr>
                 ) : filteredDrivers.length===0 ? (
-                  <tr><td colSpan={8}><div className="tbl-empty"><div className="tbl-empty-icon">📄</div><div className="tbl-empty-title">No records</div><div className="tbl-empty-sub">Import a Payroll CSV to view compliance data</div></div></td></tr>
+                  <tr><td colSpan={8}><div className="tbl-empty"><div className="tbl-empty-icon">📄</div><div className="tbl-empty-title">{t('no_data')}</div><div className="tbl-empty-sub">{t('import_csv')}</div></div></td></tr>
                 ) : filteredDrivers.map((d,i)=>(
                   <tr key={d.id}>
                     <td>{i+1}</td>
@@ -200,7 +201,7 @@ export default function Documents() {
             </table>
           </div>
           <div className="table-footer">
-            <span className="tf-info">Showing {Math.min((page-1)*LIMIT+1,total)}–{Math.min(page*LIMIT,total)} of {total.toLocaleString()}</span>
+            <span className="tf-info">{t('showing')} {Math.min((page-1)*LIMIT+1,total)}–{Math.min(page*LIMIT,total)} {t('of')} {total.toLocaleString()}</span>
             <div className="pager">
               {page>1&&<button onClick={()=>loadTable(page-1)}>‹</button>}
               {Array.from({length:Math.min(5,pages)},(_,i)=>{const p=Math.max(1,Math.min(page-2,pages-4))+i;return<button key={p} className={p===page?'active':''} onClick={()=>loadTable(p)}>{p}</button>})}

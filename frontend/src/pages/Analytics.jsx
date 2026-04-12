@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { api } from '../api'
 import { Chart, registerables } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+import { useStore } from '../store'
 import toast from 'react-hot-toast'
 
 Chart.register(...registerables, ChartDataLabels)
@@ -87,6 +88,7 @@ function Slicer({ label, value, options, onChange }) {
 }
 
 export default function Analytics() {
+  const { t } = useStore()
   const [raw, setRaw]           = useState(null)
   const [filtered, setFiltered] = useState(null)
   const [loading, setLoading]   = useState(true)
@@ -157,7 +159,7 @@ export default function Analytics() {
           <div className="dh-icon" style={{background:'#f5f3ff',color:'#7c3aed'}}>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
           </div>
-          <div><div className="dh-title">Analytics &amp; Reports</div><div className="dh-sub">Live data from your database</div></div>
+          <div><div className="dh-title">{t('analytics_title')}</div><div className="dh-sub">{t('live_data')}</div></div>
         </div>
         <div className="dh-actions" style={{display:'flex',gap:8,alignItems:'center'}}>
           <label style={{cursor:'pointer'}}>
@@ -181,29 +183,29 @@ export default function Analytics() {
               } catch(err) { toast.error(err.message, {id:toastId}) }
               e.target.value = ''
             }}/>
-            <span className="btn btn-ghost" style={{pointerEvents:'none'}}>⬆ Import CSV</span>
+            <span className="btn btn-ghost" style={{pointerEvents:'none'}}>⬆ {t('import_csv')}</span>
           </label>
-          <button className="btn btn-ghost" onClick={()=>window.print()}>Print Report</button>
+          <button className="btn btn-ghost" onClick={()=>window.print()}>{t('print')}</button>
         </div>
       </div>
 
       <div style={{display:'flex',alignItems:'center',gap:16,padding:'10px 24px',background:'#f8fafc',borderBottom:'1px solid #e2e8f0',flexWrap:'wrap'}}>
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="#94a3b8" strokeWidth="2" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-        <Slicer label="Depot" value={depot} options={DEPOTS} onChange={v=>{setDepot(v);applyServerFilter(v,nationality,year)}}/>
-        <Slicer label="Nationality" value={nationality} options={NATIONALITIES} onChange={v=>{setNationality(v);applyServerFilter(depot,v,year)}}/>
-        <Slicer label="Hire Year" value={year} options={YEAR_OPTIONS} onChange={v=>{setYear(v);applyServerFilter(depot,nationality,v)}}/>
+        <Slicer label={t('depot')} value={depot} options={DEPOTS} onChange={v=>{setDepot(v);applyServerFilter(v,nationality,year)}}/>
+        <Slicer label={t('nationality')} value={nationality} options={NATIONALITIES} onChange={v=>{setNationality(v);applyServerFilter(depot,v,year)}}/>
+        <Slicer label={t('hire_trend')} value={year} options={YEAR_OPTIONS} onChange={v=>{setYear(v);applyServerFilter(depot,nationality,v)}}/>
         {anyActive && <button onClick={resetSlicers} style={{fontSize:11,padding:'3px 10px',borderRadius:6,border:'1px solid #e2e8f0',background:'#fff',color:'#64748b',cursor:'pointer'}}>✕ Reset</button>}
-        {anyActive && <span style={{fontSize:11,color:'#7c3aed',fontWeight:600}}>Filtered view — showing subset</span>}
+        {anyActive && <span style={{fontSize:11,color:'#7c3aed',fontWeight:600}}>{t('filtered_view')}</span>}
         {filtering && <div className="spinner dark" style={{width:16,height:16}}/>}
       </div>
 
       <div className="page-body">
         <div className="kpi-grid c4">
           {[
-            ['Total Drivers', drivers.total||0,               '#1d4ed8','#eff6ff'],
-            ['Active',        drivers.status?.Active||0,       '#059669','#f0fdf4'],
-            ['Terminated',    drivers.status?.Terminated||0,   '#dc2626','#fef2f2'],
-            ['Recruitment',   recruitment.total||0,            '#7c3aed','#f5f3ff'],
+            [t('kpi_total')+' '+t('drivers'), drivers.total||0,               '#1d4ed8','#eff6ff'],
+            [t('kpi_active'),                 drivers.status?.Active||0,       '#059669','#f0fdf4'],
+            [t('kpi_terminated'),             drivers.status?.Terminated||0,   '#dc2626','#fef2f2'],
+            [t('kpi_recruitment'),            recruitment.total||0,            '#7c3aed','#f5f3ff'],
           ].map(([l,v,c,bg])=>(
             <div key={l} className="kpi" style={{'--kc':c,'--kc-bg':bg}}>
               <div className="kpi-accent"/>
@@ -214,29 +216,29 @@ export default function Analytics() {
         </div>
 
         <div className="chart-grid c1">
-          <ChartBox type="line" labels={hireYears} data={hireValues} title="Hire Trend by Year" sub="Driver recruitment volume" height={260}/>
+          <ChartBox type="line" labels={hireYears} data={hireValues} title={t('hire_trend')} sub={t('live_data')} height={260}/>
         </div>
 
         <div className="chart-grid c2">
-          <ChartBox type="bar"  labels={Object.keys(drivers.depot||{})}        data={Object.values(drivers.depot||{})}        title="Drivers by Depot"   height={260}/>
-          <ChartBox type="bar"  labels={Object.keys(drivers.nationality||{})}  data={Object.values(drivers.nationality||{})}  title="Top Nationalities"  height={260} horiz/>
+          <ChartBox type="bar"  labels={Object.keys(drivers.depot||{})}        data={Object.values(drivers.depot||{})}        title={t('drivers_by_depot')}  height={260}/>
+          <ChartBox type="bar"  labels={Object.keys(drivers.nationality||{})}  data={Object.values(drivers.nationality||{})}  title={t('top_nationalities')} height={260} horiz/>
         </div>
 
         <div className="chart-grid c3">
-          <ChartBox type="doughnut" labels={Object.keys(drivers.contractor||{})} data={Object.values(drivers.contractor||{})} title="By Contractor"       height={220}/>
-          <ChartBox type="doughnut" labels={Object.keys(drivers.idCard||{})}     data={Object.values(drivers.idCard||{})}     title="ID Card Status"      height={220}/>
-          <ChartBox type="doughnut" labels={Object.keys(recruitment.status||{})} data={Object.values(recruitment.status||{})} title="Recruitment Status" height={220}/>
+          <ChartBox type="doughnut" labels={Object.keys(drivers.contractor||{})} data={Object.values(drivers.contractor||{})} title={t('by_contractor')}       height={220}/>
+          <ChartBox type="doughnut" labels={Object.keys(drivers.idCard||{})}     data={Object.values(drivers.idCard||{})}     title={t('id_card_status')}      height={220}/>
+          <ChartBox type="doughnut" labels={Object.keys(recruitment.status||{})} data={Object.values(recruitment.status||{})} title={t('recruitment_status')}  height={220}/>
         </div>
 
         <div className="chart-grid c2">
           <ChartBox type="doughnut"
             labels={['Pass','Fail']}
             data={[(recruitment.roadTest?.pass||0)+(recruitment.roadTest?.Pass||0),(recruitment.roadTest?.fail||0)+(recruitment.roadTest?.Fail||0)]}
-            title="Road Test Results" height={220}/>
+            title={t('road_test')} height={220}/>
           <ChartBox type="bar"
-            labels={['License','Passport','Visa','Medical']}
+            labels={[t('license'),t('passport'),t('visa'),t('medical')]}
             data={[docs.lic_expired||0,docs.pass_expired||0,docs.visa_expired||0,docs.med_expired||0]}
-            title="Expired Documents by Type" height={220}/>
+            title={t('expired_docs')} height={220}/>
         </div>
       </div>
     </div>
