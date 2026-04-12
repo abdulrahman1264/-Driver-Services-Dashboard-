@@ -25,7 +25,7 @@ function DocCard({ title, data, color, severity, onClick, active, t }) {
 }
 
 export default function Documents() {
-  const { isAdmin, t } = useStore()
+  const { isAdmin, t, lang } = useStore()
   const [analytics, setAnalytics] = useState(null)
   const [drivers, setDrivers]     = useState([])
   const [total, setTotal]         = useState(0)

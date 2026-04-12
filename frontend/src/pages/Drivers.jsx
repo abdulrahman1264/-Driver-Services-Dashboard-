@@ -239,7 +239,7 @@ function ConfirmModal({ message, onConfirm, onClose, t }) {
 }
 
 export default function Drivers() {
-  const { isAdmin, t } = useStore()
+  const { isAdmin, t, lang } = useStore()
   const [drivers, setDrivers]   = useState([])
   const [total, setTotal]       = useState(0)
   const [loading, setLoading]   = useState(true)

@@ -8,7 +8,7 @@ const S = {
 }
 
 export default function Terminated() {
-  const { t } = useStore()
+  const { t, lang } = useStore()
   const [drivers, setDrivers]   = useState([])
   const [total, setTotal]       = useState(0)
   const [loading, setLoading]   = useState(true)

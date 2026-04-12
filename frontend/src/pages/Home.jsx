@@ -5,7 +5,7 @@ import { api } from '../api'
 
 // v2
 export default function Home() {
-  const { user, t } = useStore()
+  const { user, t, lang } = useStore()
   const navigate = useNavigate()
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)

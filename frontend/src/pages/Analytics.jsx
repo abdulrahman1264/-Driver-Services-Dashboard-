@@ -88,7 +88,7 @@ function Slicer({ label, value, options, onChange }) {
 }
 
 export default function Analytics() {
-  const { t } = useStore()
+  const { t, lang } = useStore()
   const [raw, setRaw]           = useState(null)
   const [filtered, setFiltered] = useState(null)
   const [loading, setLoading]   = useState(true)

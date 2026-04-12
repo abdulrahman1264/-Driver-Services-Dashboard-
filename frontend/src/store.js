@@ -147,11 +147,12 @@ export const useStore = create((set, get) => ({
     localStorage.setItem('ds_lang', lang)
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'
     document.documentElement.lang = lang
-    set({ lang })
+    set({ lang, _lang: lang })
   },
 
   t: (key) => {
     const lang = get().lang
     return TRANSLATIONS[lang]?.[key] || TRANSLATIONS.en[key] || key
   },
+  _lang: localStorage.getItem('ds_lang') || 'en',
 }))
