@@ -1,4 +1,3 @@
-import { useStore } from '../store'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../api'
@@ -113,4 +112,3 @@ export default function Login() {
     </div>
   )
 }
-
