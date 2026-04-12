@@ -164,3 +164,8 @@ export const useStore = create((set, get) => ({
     return TRANSLATIONS[lang]?.[key] || TRANSLATIONS.en[key] || key
   },
 }))
+
+export const useTranslation = () => {
+  const lang = useStore(s => s.lang)
+  return (key) => TRANSLATIONS[lang]?.[key] || TRANSLATIONS.en[key] || key
+}
