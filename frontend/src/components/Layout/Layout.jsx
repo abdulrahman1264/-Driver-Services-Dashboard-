@@ -14,7 +14,7 @@ const NAV_KEYS = [
 ]
 
 export default function Layout() {
-  const { user, clearAuth, t } = useStore()
+  const { user, clearAuth, t, lang } = useStore()
   const NAV = NAV_KEYS.map(n => ({ ...n, label: t(n.key) }))
   const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(false)
