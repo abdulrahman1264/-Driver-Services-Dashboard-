@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { api } from '../api'
-import { useStore } from '../store'
+import { useStore, useTranslation } from '../store'
 import toast from 'react-hot-toast'
 
 function Tag({ v }) {
@@ -135,20 +135,6 @@ export default function Recruitment() {
 
   function resetAll() {
     setFilters({}); setSearch(''); load(1, {}, '')
-  }
-
-  async function handleEdit(data) {
-    const updated = await api.updateRecruitment(data.id, data)
-    setRecs(prev => prev.map(r => r.id===updated.id ? updated : r))
-    toast.success(t('candidate_records'))
-  }
-
-  async function handleDelete(rec) {
-    await api.deleteRecruitment(rec.id)
-    setRecs(prev => prev.filter(r => r.id !== rec.id))
-    setTotal(t => t-1)
-    setDeleteRec(null)
-    toast.success(t('delete')+' OK')
   }
 
   async function handleCSV(e) {

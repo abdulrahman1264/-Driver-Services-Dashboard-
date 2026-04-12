@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { api } from '../api'
-import { useStore } from '../store'
+import { useStore, useTranslation } from '../store'
 import toast from 'react-hot-toast'
 
 export default function Settings() {

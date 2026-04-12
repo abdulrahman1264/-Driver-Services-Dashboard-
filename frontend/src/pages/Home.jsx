@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { useStore } from '../store'
+import { useStore, useTranslation } from '../store'
 import { useEffect, useState } from 'react'
 import { api } from '../api'
 

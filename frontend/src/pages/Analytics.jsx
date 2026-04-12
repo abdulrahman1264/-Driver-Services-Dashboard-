@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { api } from '../api'
 import { Chart, registerables } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
-import { useStore } from '../store'
+import { useStore, useTranslation } from '../store'
 import toast from 'react-hot-toast'
 
 Chart.register(...registerables, ChartDataLabels)

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { api } from '../api'
-import { useStore } from '../store'
+import { useStore, useTranslation } from '../store'
 import toast from 'react-hot-toast'
 
 function DocCard({ title, data, color, severity, onClick, active, t }) {

@@ -124,6 +124,11 @@ const EN = {
 
 export const TRANSLATIONS = { en: EN, ar: AR }
 
+export const useTranslation = () => {
+  const lang = useStore(s => s.lang)
+  return (key) => TRANSLATIONS[lang]?.[key] || TRANSLATIONS.en[key] || key
+}
+
 export const useStore = create((set, get) => ({
   user: JSON.parse(localStorage.getItem('ds_user') || 'null'),
   token: localStorage.getItem('ds_token') || null,
@@ -154,5 +159,4 @@ export const useStore = create((set, get) => ({
     const lang = get().lang
     return TRANSLATIONS[lang]?.[key] || TRANSLATIONS.en[key] || key
   },
-  _lang: localStorage.getItem('ds_lang') || 'en',
 }))
