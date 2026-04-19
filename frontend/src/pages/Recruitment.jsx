@@ -98,6 +98,8 @@ function ConfirmModal({ message, onConfirm, onClose, t }) {
 
 export default function Recruitment() {
   const { isAdmin, t, lang } = useStore()
+  const [activeCount, setActiveCount] = useState(0)
+  const [terminatedCount, setTerminatedCount] = useState(0)
   const [recs, setRecs]           = useState([])
   const [total, setTotal]         = useState(0)
   const [analytics, setAnalytics] = useState(null)

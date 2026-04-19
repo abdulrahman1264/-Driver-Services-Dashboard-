@@ -30,6 +30,12 @@ export default function Terminated() {
       if (q) params.search = q
       const res = await api.getDrivers(params)
       setDrivers(res.data); setTotal(res.total); setPage(p)
+      const [actRes, termRes] = await Promise.all([
+        api.getDrivers({...params, status:'Active', limit:1}),
+        api.getDrivers({...params, status:'Terminated', limit:1})
+      ])
+      setActiveCount(actRes.total)
+      setTerminatedCount(termRes.total)
     } catch(e) { toast.error(e.message) }
     finally { setLoading(false) }
   }

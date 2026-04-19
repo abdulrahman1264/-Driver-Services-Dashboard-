@@ -240,6 +240,8 @@ function ConfirmModal({ message, onConfirm, onClose, t }) {
 
 export default function Drivers() {
   const { isAdmin, t, lang } = useStore()
+  const [activeCount, setActiveCount] = useState(0)
+  const [terminatedCount, setTerminatedCount] = useState(0)
   const [drivers, setDrivers]   = useState([])
   const [total, setTotal]       = useState(0)
   const [loading, setLoading]   = useState(true)
@@ -262,6 +264,12 @@ export default function Drivers() {
       if (s) params.search = s
       const res = await api.getDrivers(params)
       setDrivers(res.data); setTotal(res.total); setPage(p)
+      const [actRes, termRes] = await Promise.all([
+        api.getDrivers({...params, status:'Active', limit:1}),
+        api.getDrivers({...params, status:'Terminated', limit:1})
+      ])
+      setActiveCount(actRes.total)
+      setTerminatedCount(termRes.total)
     } catch(e) { toast.error(e.message) }
     finally { setLoading(false) }
   }
@@ -371,8 +379,8 @@ export default function Drivers() {
         <div className="kpi-grid c4">
           {[
             [t('total'),   total,                                                          '#1d4ed8','#eff6ff'],
-            [t('active'),  drivers.filter(d=>d.real_time_status==='Active').length,        '#059669','#f0fdf4'],
-            [t('terminated_s'), drivers.filter(d=>d.real_time_status==='Terminated').length,    '#dc2626','#fef2f2'],
+            [t('active'),  activeCount,        '#059669','#f0fdf4'],
+            [t('terminated_s'), terminatedCount,    '#dc2626','#fef2f2'],
             [t('this_page'), drivers.length,                                                 '#7c3aed','#f5f3ff'],
           ].map(([l,v,c,bg])=>(
             <div key={l} className="kpi" style={{'--kc':c,'--kc-bg':bg}}>

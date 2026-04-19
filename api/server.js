@@ -90,35 +90,21 @@ app.get('/api/drivers', auth, async (req, res) => {
     const lim = parseInt(limit);
     let rows, countRow;
 
+    // Build dynamic WHERE
+    const conds = ['is_deleted=FALSE']
+    if (status) conds.push(`real_time_status='${status.replace(/'/g,"''")}'`)
+    if (depot) conds.push(`LOWER(depot)=LOWER('${depot.replace(/'/g,"''")}')`  )
+    if (nationality) conds.push(`LOWER(nationality)=LOWER('${nationality.replace(/'/g,"''")}')`  )
+    if (contractor) conds.push(`LOWER(contractor)=LOWER('${contractor.replace(/'/g,"''")}')`  )
     if (search) {
-      const q = '%' + search.toLowerCase() + '%';
-      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND (LOWER(full_name) LIKE ${q} OR rta_id LIKE ${q})`;
-      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND (LOWER(full_name) LIKE ${q} OR rta_id LIKE ${q}) ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
-    } else if (status && depot) {
-      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} AND LOWER(depot)=LOWER(${depot})`;
-      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} AND LOWER(depot)=LOWER(${depot}) ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
-    } else if (status && nationality) {
-      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} AND nationality=${nationality}`;
-      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} AND nationality=${nationality} ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
-    } else if (status && contractor) {
-      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} AND LOWER(contractor)=LOWER(${contractor})`;
-      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} AND LOWER(contractor)=LOWER(${contractor}) ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
-    } else if (status) {
-      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status}`;
-      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
-    } else if (depot) {
-      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND LOWER(depot)=LOWER(${depot})`;
-      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND LOWER(depot)=LOWER(${depot}) ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
-    } else if (nationality) {
-      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND nationality=${nationality}`;
-      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND nationality=${nationality} ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
-    } else if (contractor) {
-      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND LOWER(contractor)=LOWER(${contractor})`;
-      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND LOWER(contractor)=LOWER(${contractor}) ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
-    } else {
-      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE`;
-      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
+      const q = search.toLowerCase().replace(/'/g,"''")
+      conds.push(`(LOWER(full_name) LIKE '%${q}%' OR rta_id LIKE '%${q}%')`)
     }
+    const where = conds.join(' AND ')
+    const countResult = await sql(`SELECT COUNT(*)::int as c FROM drivers WHERE ${where}`)
+    const dataResult  = await sql(`SELECT * FROM drivers WHERE ${where} ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`)
+    rows = dataResult
+    countRow = countResult
 
     res.json({ data: rows, total: countRow[0]?.c || 0, page: parseInt(page), limit: lim });
   } catch (err) { console.error(err); res.status(500).json({ error: err.message }); }

@@ -26,6 +26,8 @@ function DocCard({ title, data, color, severity, onClick, active, t }) {
 
 export default function Documents() {
   const { isAdmin, t, lang } = useStore()
+  const [activeCount, setActiveCount] = useState(0)
+  const [terminatedCount, setTerminatedCount] = useState(0)
   const [analytics, setAnalytics] = useState(null)
   const [drivers, setDrivers]     = useState([])
   const [total, setTotal]         = useState(0)
@@ -76,6 +78,12 @@ export default function Documents() {
       }
       const res = await api.getDrivers(params)
       setDrivers(res.data); setTotal(res.total); setPage(p)
+      const [actRes, termRes] = await Promise.all([
+        api.getDrivers({...params, status:'Active', limit:1}),
+        api.getDrivers({...params, status:'Terminated', limit:1})
+      ])
+      setActiveCount(actRes.total)
+      setTerminatedCount(termRes.total)
     } catch(e) { toast.error(e.message) }
     finally { setLoading(false) }
   }
