@@ -20,14 +20,48 @@ function DocCard({ title, data, color, severity, onClick, active, t }) {
           <div key={l} className="doc-stat-item"><div className="doc-stat-val" style={{color:c}}>{Number(v).toLocaleString()}</div><div className="doc-stat-lbl">{l}</div></div>
         ))}
       </div>
+    {editDriver && (
+        <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&setEditDriver(null)}>
+          <div className="modal-box">
+            <div className="modal-header">
+              <div className="modal-title">{t('edit_driver')} — {editDriver.full_name}</div>
+              <button className="modal-close" onClick={()=>setEditDriver(null)}>✕</button>
+            </div>
+            <div className="modal-body">
+              <div className="form-row c2">
+                <div className="form-group"><label className="form-label">{t('license_expiry')}</label><input className="form-input" type="date" defaultValue={editDriver.license_expired?.slice(0,10)||''} onChange={e=>setEditDriver(d=>({...d,license_expired:e.target.value}))}/></div>
+                <div className="form-group"><label className="form-label">{t('passport_expiry')}</label><input className="form-input" type="date" defaultValue={editDriver.passport_expired?.slice(0,10)||''} onChange={e=>setEditDriver(d=>({...d,passport_expired:e.target.value}))}/></div>
+              </div>
+              <div className="form-row c2">
+                <div className="form-group"><label className="form-label">{t('visa_expiry')}</label><input className="form-input" type="date" defaultValue={editDriver.visa_expired?.slice(0,10)||''} onChange={e=>setEditDriver(d=>({...d,visa_expired:e.target.value}))}/></div>
+                <div className="form-group"><label className="form-label">{t('medical_expiry')}</label><input className="form-input" type="date" defaultValue={editDriver.medical_expired?.slice(0,10)||''} onChange={e=>setEditDriver(d=>({...d,medical_expired:e.target.value}))}/></div>
+              </div>
+              <div className="form-row c2">
+                <div className="form-group"><label className="form-label">{t('id_card')}</label>
+                  <select className="form-select" defaultValue={editDriver.id_card_status||''} onChange={e=>setEditDriver(d=>({...d,id_card_status:e.target.value}))}>
+                    {['Renewed','Applied','Expired','Terminated','Security Rejected','Buses','IT  error'].map(s=><option key={s}>{s}</option>)}
+                  </select>
+                </div>
+                <div className="form-group"><label className="form-label">{t('status')}</label>
+                  <select className="form-select" defaultValue={editDriver.real_time_status||''} onChange={e=>setEditDriver(d=>({...d,real_time_status:e.target.value}))}>
+                    <option>Active</option><option>Terminated</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-ghost" onClick={()=>setEditDriver(null)}>{t('cancel')}</button>
+              <button className="btn btn-primary" onClick={()=>handleEdit(editDriver)}>{t('save')}</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
 
 export default function Documents() {
-  const { isAdmin, t, lang } = useStore()
-  const [activeCount, setActiveCount] = useState(0)
-  const [terminatedCount, setTerminatedCount] = useState(0)
+  const { isAdmin, t } = useStore()
   const [analytics, setAnalytics] = useState(null)
   const [drivers, setDrivers]     = useState([])
   const [total, setTotal]         = useState(0)
@@ -37,6 +71,8 @@ export default function Documents() {
   const [depot, setDepot]         = useState('')
   const [slicerOpen, setSlicerOpen] = useState(false)
   const [page, setPage]           = useState(1)
+  const [search, setSearch]       = useState('')
+  const [editDriver, setEditDriver] = useState(null)
   const fileRef = useRef()
   const LIMIT = 100
 
@@ -66,11 +102,12 @@ export default function Documents() {
     } catch(e) {}
   }
 
-  async function loadTable(p=1, depotVal=depot, docKey=activeDoc, statusVal=docStatus) {
+  async function loadTable(p=1, depotVal=depot, docKey=activeDoc, statusVal=docStatus, searchVal=search) {
     setLoading(true)
     try {
       const params = { page:p, limit:LIMIT }
       if (depotVal) params.depot = depotVal
+      if (searchVal) params.search = searchVal
       if (docKey && statusVal) {
         const fieldMap = { lic:'license', pass:'passport', visa:'visa', med:'medical' }
         const field = fieldMap[docKey]
@@ -78,15 +115,18 @@ export default function Documents() {
       }
       const res = await api.getDrivers(params)
       setDrivers(res.data); setTotal(res.total); setPage(p)
-      const [actRes, termRes] = await Promise.all([
-        api.getDrivers({...params, status:'Active', limit:1}),
-        api.getDrivers({...params, status:'Terminated', limit:1})
-      ])
-      setActiveCount(actRes.total)
-      setTerminatedCount(termRes.total)
     } catch(e) { toast.error(e.message) }
     finally { setLoading(false) }
   }
+  
+  async function handleEdit(data) {
+    try {
+      const updated = await api.updateDriver(data.id, data)
+      setDrivers(prev => prev.map(d => d.id===updated.id ? updated : d))
+      setEditDriver(null)
+      toast.success('Driver updated')
+    } catch(e) { toast.error(e.message) }
+  } 
 
   async function handleCSV(e) {
     const file = e.target.files[0]; if (!file) return
@@ -180,19 +220,28 @@ export default function Documents() {
         <div className="table-card">
           <div className="table-toolbar">
             <div className="tt-title">{t('compliance_records')}</div>
-            <div className="tt-badge">{filteredDrivers.length.toLocaleString()} {t('records')}</div>
+            <div className="tt-badge">{total.toLocaleString()} {t('records')}</div>
             {activeDoc && <div className="tt-badge" style={{background:'#fef2f2',color:'#dc2626',cursor:'pointer'}} onClick={()=>{setActiveDoc(null);loadTable(1,depot,null,docStatus)}}>
               {docCards.find(c=>c.key===activeDoc)?.title} ✕
             </div>}
+            <div className="tt-right">
+              <div className="search-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input placeholder={t('search_placeholder')} value={search}
+                  onChange={e=>setSearch(e.target.value)}
+                  onKeyDown={e=>e.key==='Enter'&&loadTable(1,depot,activeDoc,docStatus,search)}/>
+              </div>
+              <button className="btn btn-ghost" onClick={()=>loadTable(1,depot,activeDoc,docStatus,search)}>{t('search')}</button>
+            </div>
           </div>
           <div className="tbl-wrap">
             <table>
-              <thead><tr><th>#</th><th>{t('full_name')}</th><th>{t('depot')}</th><th>{t('license')}</th><th>{t('passport')}</th><th>{t('visa')}</th><th>{t('medical')}</th><th>{t('id_card')}</th></tr></thead>
+              <thead><tr><th>#</th><th>{t('full_name')}</th><th>{t('depot')}</th><th>{t('license')}</th><th>{t('passport')}</th><th>{t('visa')}</th><th>{t('medical')}</th><th>{t('id_card')}</th>{isAdmin()&&<th>{t('actions')}</th>}</tr></thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={8} style={{textAlign:'center',padding:40}}><div className="spinner dark" style={{margin:'0 auto'}}/></td></tr>
+                  <tr><td colSpan={isAdmin()?9:8} style={{textAlign:'center',padding:40}}><div className="spinner dark" style={{margin:'0 auto'}}/></td></tr>
                 ) : filteredDrivers.length===0 ? (
-                  <tr><td colSpan={8}><div className="tbl-empty"><div className="tbl-empty-icon">📄</div><div className="tbl-empty-title">{t('no_data')}</div><div className="tbl-empty-sub">{t('import_csv')}</div></div></td></tr>
+                  <tr><td colSpan={isAdmin()?9:8}><div className="tbl-empty"><div className="tbl-empty-icon">📄</div><div className="tbl-empty-title">{t('no_data')}</div><div className="tbl-empty-sub">{t('import_csv')}</div></div></td></tr>
                 ) : filteredDrivers.map((d,i)=>(
                   <tr key={d.id}>
                     <td>{i+1}</td>
@@ -203,6 +252,9 @@ export default function Documents() {
                     <td><div style={{display:'flex',gap:4,alignItems:'center',flexWrap:'wrap'}}>{expTag(d.visa_expired)}<span style={{fontSize:11,color:'#94a3b8'}}>{fmt(d.visa_expired)}</span></div></td>
                     <td><div style={{display:'flex',gap:4,alignItems:'center',flexWrap:'wrap'}}>{expTag(d.medical_expired)}<span style={{fontSize:11,color:'#94a3b8'}}>{fmt(d.medical_expired)}</span></div></td>
                     <td>{d.id_card_status||'--'}</td>
+                    {isAdmin()&&<td onClick={e=>e.stopPropagation()}>
+                      <button onClick={()=>setEditDriver(d)} style={{fontSize:11,padding:'3px 8px',borderRadius:5,border:'1px solid #e2e8f0',background:'#f8fafc',color:'#334155',cursor:'pointer'}}>{t('edit')}</button>
+                    </td>}
                   </tr>
                 ))}
               </tbody>
@@ -218,6 +270,42 @@ export default function Documents() {
           </div>
         </div>
       </div>
+    {editDriver && (
+        <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&setEditDriver(null)}>
+          <div className="modal-box">
+            <div className="modal-header">
+              <div className="modal-title">{t('edit_driver')} — {editDriver.full_name}</div>
+              <button className="modal-close" onClick={()=>setEditDriver(null)}>✕</button>
+            </div>
+            <div className="modal-body">
+              <div className="form-row c2">
+                <div className="form-group"><label className="form-label">{t('license_expiry')}</label><input className="form-input" type="date" defaultValue={editDriver.license_expired?.slice(0,10)||''} onChange={e=>setEditDriver(d=>({...d,license_expired:e.target.value}))}/></div>
+                <div className="form-group"><label className="form-label">{t('passport_expiry')}</label><input className="form-input" type="date" defaultValue={editDriver.passport_expired?.slice(0,10)||''} onChange={e=>setEditDriver(d=>({...d,passport_expired:e.target.value}))}/></div>
+              </div>
+              <div className="form-row c2">
+                <div className="form-group"><label className="form-label">{t('visa_expiry')}</label><input className="form-input" type="date" defaultValue={editDriver.visa_expired?.slice(0,10)||''} onChange={e=>setEditDriver(d=>({...d,visa_expired:e.target.value}))}/></div>
+                <div className="form-group"><label className="form-label">{t('medical_expiry')}</label><input className="form-input" type="date" defaultValue={editDriver.medical_expired?.slice(0,10)||''} onChange={e=>setEditDriver(d=>({...d,medical_expired:e.target.value}))}/></div>
+              </div>
+              <div className="form-row c2">
+                <div className="form-group"><label className="form-label">{t('id_card')}</label>
+                  <select className="form-select" defaultValue={editDriver.id_card_status||''} onChange={e=>setEditDriver(d=>({...d,id_card_status:e.target.value}))}>
+                    {['Renewed','Applied','Expired','Terminated','Security Rejected','Buses','IT  error'].map(s=><option key={s}>{s}</option>)}
+                  </select>
+                </div>
+                <div className="form-group"><label className="form-label">{t('status')}</label>
+                  <select className="form-select" defaultValue={editDriver.real_time_status||''} onChange={e=>setEditDriver(d=>({...d,real_time_status:e.target.value}))}>
+                    <option>Active</option><option>Terminated</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-ghost" onClick={()=>setEditDriver(null)}>{t('cancel')}</button>
+              <button className="btn btn-primary" onClick={()=>handleEdit(editDriver)}>{t('save')}</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

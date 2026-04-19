@@ -216,6 +216,42 @@ export default function Terminated() {
         </div>
       </div>
 
+    {editDriver && (
+        <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&setEditDriver(null)}>
+          <div className="modal-box">
+            <div className="modal-header">
+              <div className="modal-title">{t('edit_driver')} — {editDriver.full_name}</div>
+              <button className="modal-close" onClick={()=>setEditDriver(null)}>✕</button>
+            </div>
+            <div className="modal-body">
+              <div className="form-row c2">
+                <div className="form-group"><label className="form-label">{t('license_expiry')}</label><input className="form-input" type="date" defaultValue={editDriver.license_expired?.slice(0,10)||''} onChange={e=>setEditDriver(d=>({...d,license_expired:e.target.value}))}/></div>
+                <div className="form-group"><label className="form-label">{t('passport_expiry')}</label><input className="form-input" type="date" defaultValue={editDriver.passport_expired?.slice(0,10)||''} onChange={e=>setEditDriver(d=>({...d,passport_expired:e.target.value}))}/></div>
+              </div>
+              <div className="form-row c2">
+                <div className="form-group"><label className="form-label">{t('visa_expiry')}</label><input className="form-input" type="date" defaultValue={editDriver.visa_expired?.slice(0,10)||''} onChange={e=>setEditDriver(d=>({...d,visa_expired:e.target.value}))}/></div>
+                <div className="form-group"><label className="form-label">{t('medical_expiry')}</label><input className="form-input" type="date" defaultValue={editDriver.medical_expired?.slice(0,10)||''} onChange={e=>setEditDriver(d=>({...d,medical_expired:e.target.value}))}/></div>
+              </div>
+              <div className="form-row c2">
+                <div className="form-group"><label className="form-label">{t('id_card')}</label>
+                  <select className="form-select" defaultValue={editDriver.id_card_status||''} onChange={e=>setEditDriver(d=>({...d,id_card_status:e.target.value}))}>
+                    {['Renewed','Applied','Expired','Terminated','Security Rejected','Buses','IT  error'].map(s=><option key={s}>{s}</option>)}
+                  </select>
+                </div>
+                <div className="form-group"><label className="form-label">{t('status')}</label>
+                  <select className="form-select" defaultValue={editDriver.real_time_status||''} onChange={e=>setEditDriver(d=>({...d,real_time_status:e.target.value}))}>
+                    <option>Active</option><option>Terminated</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-ghost" onClick={()=>setEditDriver(null)}>{t('cancel')}</button>
+              <button className="btn btn-primary" onClick={()=>handleEdit(editDriver)}>{t('save')}</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
