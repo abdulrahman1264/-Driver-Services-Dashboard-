@@ -95,26 +95,26 @@ app.get('/api/drivers', auth, async (req, res) => {
       countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND (LOWER(full_name) LIKE ${q} OR rta_id LIKE ${q})`;
       rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND (LOWER(full_name) LIKE ${q} OR rta_id LIKE ${q}) ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
     } else if (status && depot) {
-      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} AND depot=${depot}`;
-      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} AND depot=${depot} ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
+      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} AND LOWER(depot)=LOWER(${depot})`;
+      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} AND LOWER(depot)=LOWER(${depot}) ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
     } else if (status && nationality) {
       countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} AND nationality=${nationality}`;
       rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} AND nationality=${nationality} ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
     } else if (status && contractor) {
-      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} AND contractor=${contractor}`;
-      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} AND contractor=${contractor} ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
+      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} AND LOWER(contractor)=LOWER(${contractor})`;
+      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} AND LOWER(contractor)=LOWER(${contractor}) ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
     } else if (status) {
       countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status}`;
       rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND real_time_status=${status} ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
     } else if (depot) {
-      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND depot=${depot}`;
-      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND depot=${depot} ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
+      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND LOWER(depot)=LOWER(${depot})`;
+      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND LOWER(depot)=LOWER(${depot}) ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
     } else if (nationality) {
       countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND nationality=${nationality}`;
       rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND nationality=${nationality} ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
     } else if (contractor) {
-      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND contractor=${contractor}`;
-      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND contractor=${contractor} ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
+      countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE AND LOWER(contractor)=LOWER(${contractor})`;
+      rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE AND LOWER(contractor)=LOWER(${contractor}) ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
     } else {
       countRow = await sql`SELECT COUNT(*)::int as c FROM drivers WHERE is_deleted=FALSE`;
       rows     = await sql`SELECT * FROM drivers WHERE is_deleted=FALSE ORDER BY id DESC LIMIT ${lim} OFFSET ${offset}`;
@@ -252,7 +252,7 @@ app.post('/api/upload/csv', auth, adminOnly, async (req, res) => {
           r['Place of issue']||null,
           r['Traffic File']||null,
           r['class of license']||null,
-          r['Contractor']||null,
+          (r['Contractor']||'').trim()||null,
           parseDate(r['Date Of Birth']),
           parseDate(r['Date of Hire']),
           (r['Contact ']||r['Contact']||'').trim()||null,
@@ -265,7 +265,7 @@ app.post('/api/upload/csv', auth, adminOnly, async (req, res) => {
           parseDate(r['RTA ID Card Expired']),
           r['ID Card Status']||null,
           r['Assignment Status']||null,
-          (r['Real time Status']||'Active').trim(),
+          (r['Real time Status']||'Active').trim().replace(/^active.*/i,'Active').replace(/^terminated.*/i,'Terminated'),
           parseDate(r['Date of Resignation']),
           r['Reason for Leaving']||null,
           parseDate(r['Occupational Medical Expired']),

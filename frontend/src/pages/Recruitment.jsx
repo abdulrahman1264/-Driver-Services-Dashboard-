@@ -48,7 +48,7 @@ function EditModal({ rec, onClose, onSave, t }) {
             </div>
             <div className="form-group"><label className="form-label">{t('status')}</label>
               <select className="form-select" value={form.status||''} onChange={e=>set('status',e.target.value)}>
-                {['On Board','Not Shortlisted','Shortlisted','Not Interested','Security Rejected','Pipeline','Upcoming Interview','Road Test Fail'].map(s=><option key={s}>{s}</option>)}
+                {['On Board','Shortlisted','Not Shortlisted','Not Interested','Security Rejected','Pipeline','Upcoming Interview','Training','Disqualified'].map(s=><option key={s}>{s}</option>)}
               </select>
             </div>
           </div>
@@ -208,8 +208,8 @@ export default function Recruitment() {
               placeholder={t('search_placeholder')} style={{ width:'100%', paddingLeft:32, paddingRight:10, height:34, border:'1.5px solid #e2e8f0', borderRadius:7, fontSize:13, outline:'none', boxSizing:'border-box' }}/>
           </div>
           {[
-            ['Status','status',['On Board','Not Shortlisted','Shortlisted','Not Interested','Security Rejected','Pipeline','Upcoming Interview','Road Test Fail']],
-            ['Company','company',['Reach','Omnix','Expert plus','Okool PB','Ultimate1','Ultimate2','Alsundus']],
+            ['Status','status',['On Board','Shortlisted','Not Shortlisted','Not Interested','Security Rejected','Pipeline','Upcoming Interview','Training','Disqualified']],
+            ['Company','company',['Reach','Omnix','Expert plus','Ultimate1','Ultimate2','AlSahra','Alsahra','Alsundus','Okool','Okool PB','Okool Shunting']],
             ['Road Test','road_test',['pass','fail']],
           ].map(([lbl, key, opts]) => (
             <select key={key} value={filters[key]||''} onChange={e => applyFilter(key, e.target.value)}

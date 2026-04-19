@@ -357,7 +357,7 @@ export default function Drivers() {
 
       <div className={`slicer-bar ${slicerOpen?'open':''}`}>
         <span className="slicer-label">{t('slicers')}</span>
-        {[['Status','status',['Active','Terminated']],['Depot','depot',['Al Awir','Al Quoz','Jebel Ali','Al Ruwayah','Al Khawaneej','Qusais','Etisalat Depot']],['Nationality','nationality',['India','Pakistan','Philippines','Sri Lanka','Egypt','Nepal','Sudan','Kenya']],['Contractor','contractor',['Reach','Omnix','Expert plus','Ultimate1','AlSahra','AlSundus','Ultimate2']]].map(([label,key,opts])=>(
+        {[['Status','status',['Active','Terminated']],['Depot','depot',['Al Awir','Al Awir Maintenance','Al Quoz','Al Quoz Maintenance','Jebel Ali','Jabel Ali Maintenance','Al Ruwayah','Ruwayyah Maintenance','Al Khawaneej','Khawaneej','Khawaneej Maintenance','Qusais','Al Qusais Maintenance','Etisalat Depot','Aweer Maintenance']],['Nationality','nationality',['India','Pakistan','Philippines','Sri Lanka','Egypt','Nepal','Sudan','Kenya']],['Contractor','contractor',['Reach','Reach 2','Omnix','Expert Plus','Ultimate1','Ultimate2','AlSahra','AlSundus','Okool','Okool Shun']]].map(([label,key,opts])=>(
           <select key={key} className="slicer-select" value={filters[key]||''} onChange={e=>applyFilter(key,e.target.value)}>
             <option value="">All {label}s</option>
             {opts.map(o=><option key={o}>{o}</option>)}

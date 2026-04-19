@@ -103,7 +103,7 @@ export default function Terminated() {
           </div>
           {/* Dropdowns */}
           {[
-            ['Depot','depot',['Al Awir','Al Quoz','Jebel Ali','Al Ruwayah','Al Khawaneej','Qusais','Etisalat Depot']],
+            ['Depot','depot',['Al Awir','Al Awir Maintenance','Al Quoz','Al Quoz Maintenance','Jebel Ali','Jabel Ali Maintenance','Al Ruwayah','Ruwayyah Maintenance','Al Khawaneej','Khawaneej','Khawaneej Maintenance','Qusais','Al Qusais Maintenance','Etisalat Depot','Aweer Maintenance']],
             ['Nationality','nationality',['India','Pakistan','Philippines','Sri Lanka','Egypt','Nepal','Bangladesh','Sudan','Syrian']],
             ['Contractor','contractor',['Omnix','Reach','Expert plus','Ultimate1','Ultimate2','Alsundus','Okool']],
             ['Reason','reason_for_leaving',['Absence','Resignation','Retirement','Alcohol Usage','Black Points - 24','Security Rejection','Contract Non Renewal']],
